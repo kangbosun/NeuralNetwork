@@ -24,7 +24,7 @@ namespace archive
 
 	void FileReader::Serialize(std::wstring & str)
 	{
-		uint32_t len = 0;
+		size_t len = 0;
 		*this << len;
 
 		std::vector<wchar_t> array(len);
