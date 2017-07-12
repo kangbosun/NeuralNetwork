@@ -13,11 +13,4 @@ namespace archive
 	{
 		File.write((char*)valuePtr, length);
 	}
-
-	void FileWriter::Serialize(std::wstring& str)
-	{
-		size_t len = str.length() + 1;
-		*this << len;
-		SerializeInternal((void*)str.c_str(), sizeof(wchar_t) * str.length());
-	}
 }

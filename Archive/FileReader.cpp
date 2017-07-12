@@ -21,16 +21,4 @@ namespace archive
 	{
 		File.read((char*)valuePtr, length);
 	}
-
-	void FileReader::Serialize(std::wstring & str)
-	{
-		size_t len = 0;
-		*this << len;
-
-		std::vector<wchar_t> array(len);
-
-		SerializeInternal(&array[0], len * sizeof(wchar_t));
-
-		str = std::wstring(&array[0]);
-	}
 }

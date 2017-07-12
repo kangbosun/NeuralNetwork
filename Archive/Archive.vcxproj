@@ -24,6 +24,7 @@
     <ClInclude Include="FileWriter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Archive.cpp" />
     <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="FileWriter.cpp" />
   </ItemGroup>

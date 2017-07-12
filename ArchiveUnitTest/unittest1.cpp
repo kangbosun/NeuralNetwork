@@ -7,7 +7,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace ArchiveUnitTest
-{		
+{
 
 	struct TestStruct
 	{
@@ -15,9 +15,9 @@ namespace ArchiveUnitTest
 		float f = 0.f;
 		double d = 0;
 
-		bool operator ==(const TestStruct& rhs)
+		bool operator ==(const TestStruct& rhs) const
 		{
-			return n == rhs.n 
+			return n == rhs.n
 				&& f == rhs.f
 				&& d == rhs.d;
 		}

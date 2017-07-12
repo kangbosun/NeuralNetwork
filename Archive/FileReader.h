@@ -16,9 +16,6 @@ namespace archive
 
 	protected:
 		std::ifstream File;
-
-		// Inherited via Archive
-		virtual void Serialize(std::wstring & str) override;
 	};
 }
 

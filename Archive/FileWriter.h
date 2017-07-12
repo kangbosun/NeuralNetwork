@@ -18,8 +18,5 @@ namespace archive
 
 	protected:
 		std::ofstream File;
-
-		// Inherited via Archive
-		virtual void Serialize(std::wstring & str) override;
 	};
 }
