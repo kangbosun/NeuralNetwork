@@ -17,7 +17,7 @@ namespace archive
 		return false;
 	}
 
-	void FileReader::SerializeInternal(void * valuePtr, size_t length)
+	void FileReader::Serialize(void * valuePtr, size_t length)
 	{
 		File.read((char*)valuePtr, length);
 	}

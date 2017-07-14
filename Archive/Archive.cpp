@@ -8,7 +8,7 @@ namespace archive
 		{
 			size_t len = str.length() + 1;
 			*this << len;
-			SerializeInternal((void*)str.c_str(), sizeof(wchar_t) * str.length());
+			Serialize((void*)str.c_str(), sizeof(wchar_t) * str.length());
 		}
 
 		else if (IsLoading())
@@ -18,7 +18,7 @@ namespace archive
 
 			std::vector<wchar_t> array(len);
 
-			SerializeInternal(&array[0], len * sizeof(wchar_t));
+			Serialize(&array[0], len * sizeof(wchar_t));
 
 			str = std::wstring(&array[0]);
 		}

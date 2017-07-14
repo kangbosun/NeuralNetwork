@@ -14,7 +14,7 @@ namespace archive
 
 		// Inherited via Archive
 		virtual bool IsSaving() override { return true; }
-		virtual void SerializeInternal(void* valuePtr, size_t length) override;
+		virtual void Serialize(void* valuePtr, size_t length) override;
 
 	protected:
 		std::ofstream File;

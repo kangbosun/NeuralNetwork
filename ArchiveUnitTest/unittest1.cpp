@@ -46,7 +46,8 @@ namespace ArchiveUnitTest
 
 			{ // save block
 				FileWriter Writer(filePath);
-				StructForWrite.Serialize(Writer);
+				Writer << StructForWrite;
+				//StructForWrite.Serialize(Writer);
 			}
 			TestStruct StructForRead;
 			Assert::IsFalse(StructForWrite == StructForRead);

@@ -9,7 +9,7 @@ namespace archive
 		assert(File.is_open());
 	}
 
-	void FileWriter::SerializeInternal(void* valuePtr, size_t length)
+	void FileWriter::Serialize(void* valuePtr, size_t length)
 	{
 		File.write((char*)valuePtr, length);
 	}
