@@ -130,6 +130,8 @@ namespace neural_network
 		NeuronLayer& GetInputLayer();
 		NeuronLayer& GetOutputLayer();
 
+		const std::vector<NeuronLayer>& GetNeuronLayers() const { return Layers; }
+
 		void ForwardPropagation(const std::vector<double> _inputValues);
 
 	protected:

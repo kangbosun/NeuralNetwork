@@ -8,7 +8,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace ArchiveUnitTest
 {
-
 	struct TestStruct
 	{
 		int n = 0;
@@ -30,7 +29,7 @@ namespace ArchiveUnitTest
 		}
 	};
 
-	TEST_CLASS(UnitTest1)
+	TEST_CLASS(ArchiveUnitTest)
 	{
 	public:
 		TEST_METHOD(NumericWriteReadTest)
@@ -77,6 +76,7 @@ namespace ArchiveUnitTest
 				FileReader Reader(filePath);
 				Reader << StringForRead;
 			}
+
 
 			Assert::AreEqual(StringForWrite, StringForRead);
 		}
