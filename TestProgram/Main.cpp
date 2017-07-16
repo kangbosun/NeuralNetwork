@@ -13,7 +13,14 @@ void main()
 	create_info.LayerInfos[1].NeuronCount = 4;
 	create_info.LayerInfos[2].NeuronCount = 1;
 
-	NeuralNetwork neuralNetwork(create_info);
+	std::vector<double> inputValues = { 1, 0 };
 
+	NeuralNetwork neuralNetwork(create_info);
+	
+	neuralNetwork.ForwardPropagation(inputValues);
+
+	NeuronLayer& output_layer = neuralNetwork.GetOutputLayer();
+
+	build faile
 }
 
