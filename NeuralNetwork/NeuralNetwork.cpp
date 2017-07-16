@@ -14,16 +14,16 @@ namespace neural_network
 	double NeuronConnection::GetRandomWeight()
 	{
 		static std::mt19937_64 rnd;
-		std::uniform_real_distribution<double> random(0, 1);
+		static std::uniform_real_distribution<double> random(0, 1);
 
 		return random(rnd);
 	}
 
 //===================================================================================
 
-	Neuron::Neuron() :
+	Neuron::Neuron(double _value/* = 0.0*/) :
 		Id(0),
-		Value(0.0)
+		Value(_value)
 	{
 	}
 
@@ -33,9 +33,15 @@ namespace neural_network
 		Connections.resize(_connectionCount);
 	}
 
+	double Neuron::GetWeightedValue(size_t index)
+	{
+		verify(index < Connections.size());
+		return Connections[index].Weight * Value;
+	}
+
 //===================================================================================
 
-	NeuronLayer::NeuronLayer(const NeuronLayerCreateInfo & _createInfo)
+	NeuronLayer::NeuronLayer(const NeuronLayerCreateInfo & _createInfo) : Bias(1.0)
 	{
 		check(_createInfo.NeuronCount);
 		uint32_t neuron_count = _createInfo.NeuronCount;
@@ -66,6 +72,27 @@ namespace neural_network
 		{
 			neuron.CreateConnections(next_layer_nueron_count);
 		}
+
+		Bias.CreateConnections(next_layer_nueron_count);
+	}
+
+	void NeuronLayer::ForwardPropagation(NeuronLayer& _prevLayer, const DataSetInfo & _dataSetInfo)
+	{
+		for (size_t i = 0; i < Neurons.size(); ++i)
+		{
+			double sum = 0;
+			for (size_t n = 0; n < _prevLayer.NeuronCount(); ++n)
+			{
+				sum += _prevLayer[n].GetWeightedValue(i);
+			}
+			Neurons[i].Value = sum;
+		}
+	}
+
+	Neuron & NeuronLayer::operator[](size_t _index)
+	{
+		verify(Neurons.size() > _index);
+		return Neurons[_index];
 	}
 
 //===================================================================================
@@ -113,6 +140,9 @@ namespace neural_network
 	NeuralNetwork::NeuralNetwork(const NeuralNetworkCreateInfo& _createInfo)
 	{
 		check(_createInfo.ActivationFunction != nullptr);
+		ActivationFunction = _createInfo.ActivationFunction;
+
+		InputDataSetInfo = _createInfo.InputDataSetInfo;
 
 		CreateLayers(_createInfo);
 
@@ -124,18 +154,73 @@ namespace neural_network
 	{
 	}
 
+	void NeuralNetwork::ForwardPropagation(const std::vector<double> _inputValues)
+	{
+		verify(_inputValues.size() == GetInputLayer().NeuronCount());
+
+		SetState(State::ForwardPropagationing);
+
+		// Setting Inputlayer
+		NeuronLayer& input_layer = GetInputLayer();
+		for (size_t i = 0; i < input_layer.NeuronCount(); ++i)
+		{
+			input_layer[i].Value = ActivationFunction->Normalize(_inputValues[i], InputDataSetInfo);
+		}
+
+		// hidden layers and output layer
+		for (size_t i = 1; i < Layers.size(); ++i)
+		{
+			NeuronLayer& prev_layer = Layers[i - 1];
+			NeuronLayer& curr_layer = Layers[i];
+
+			curr_layer.ForwardPropagation(prev_layer, InputDataSetInfo);
+		}
+
+		SetState(State::ForwardPropagationFinished);
+	}
+
 //===================================================================================
 
-	double Sigmoid::Apply(double _in)
+	double Sigmoid::Get(double x)
+	{
+		return 1.0 / (1.0 + exp(-x));
+	}
+
+	double Sigmoid::GetDerivative(double x)
 	{
 		return 0.0;
 	}
 
-	double Sigmoid::Normalize(double _in)
+	double Sigmoid::Normalize(double x, DataSetInfo& _dataSetInfo)
+	{
+		return 0.0;
+	}
+
+	double Sigmoid::Denormalize(double x, DataSetInfo& _dataSetInfo)
 	{
 		return 0.0;
 	}
 
 //===================================================================================
 
+	double Tanh::Get(double x)
+	{
+		return tanh(x);
+	}
+
+	double Tanh::GetDerivative(double x)
+	{
+		return 1 - (x * x);
+	}
+
+	double Tanh::Normalize(double x, DataSetInfo& _dataSetInfo)
+	{
+		return (x - _dataSetInfo.Min) / (_dataSetInfo.Max - _dataSetInfo.Min);
+	}
+
+	double Tanh::Denormalize(double x, DataSetInfo& _dataSetInfo)
+	{
+		return ( x * (_dataSetInfo.Max - _dataSetInfo.Min)) + _dataSetInfo.Min;
+	}
+	//===================================================================================
 }
