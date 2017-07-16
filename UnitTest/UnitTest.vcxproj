@@ -22,9 +22,10 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{D215606F-CA82-492D-98D2-CC92B3507D89}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ArchiveUnitTest</RootNamespace>
+    <RootNamespace>UnitTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+    <ProjectName>UnitTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -159,6 +160,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Archive\Archive.vcxproj">
       <Project>{0f24839e-1b7d-4760-8f45-1585a17e6cdd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\NeuralNetwork\NeuralNetwork.vcxproj">
+      <Project>{c7cc20a4-6dfe-4c11-be00-1e283bb3c14f}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
