@@ -20,7 +20,5 @@ void main()
 	neuralNetwork.ForwardPropagation(inputValues);
 
 	NeuronLayer& output_layer = neuralNetwork.GetOutputLayer();
-
-	build faile
 }
 
