@@ -15,6 +15,13 @@ namespace neural_network
 	private :
 		static double GetRandomWeight();
 	};
+//===================================================================================
+	
+	struct DataSetInfo
+	{
+		double Min;
+		double Max;
+	};
 
 //===================================================================================
 	struct Neuron
@@ -24,9 +31,11 @@ namespace neural_network
 		
 		std::vector<NeuronConnection> Connections;
 
-		Neuron();
+		Neuron(double _value = 0.0);
 
 		void CreateConnections(size_t _connectionCount);
+
+		double GetWeightedValue(size_t index);
 	};
 //===================================================================================
 	struct NeuronLayerCreateInfo
@@ -41,21 +50,45 @@ namespace neural_network
 		
 		void ConnectNeurons(const NeuronLayer& _nextLayer);
 
+		void ForwardPropagation(NeuronLayer& _prevLayer, const DataSetInfo& _dataSetInfo);
+
+		Neuron& operator[](size_t _index);
+
+		size_t NeuronCount() const { return Neurons.size(); }
+
 	protected :
 		std::vector<Neuron> Neurons;
+		Neuron Bias;
 	};
+
 //===================================================================================
 	struct IActivationFunction
 	{
-		virtual double Apply(double _in) = 0;
-		virtual double Normalize(double _in) = 0;
+		virtual double Get(double x) = 0;
+		virtual double GetDerivative(double x) = 0;
+
+		virtual double Normalize(double x, DataSetInfo& _dataSetInfo) = 0;
+		virtual double Denormalize(double x, DataSetInfo& _dataSetInfo) = 0;
 	};
 
 	struct Sigmoid : public IActivationFunction
 	{
 		// Inherited via IActivationFunction
-		virtual double Apply(double _in) override;
-		virtual double Normalize(double _in) override;
+		virtual double Get(double _in) override;
+		virtual double GetDerivative(double x) override;
+
+		virtual double Normalize(double _in, DataSetInfo& _dataSetInfo) override;
+		virtual double Denormalize(double x, DataSetInfo& _dataSetInfo) override;	
+	};
+
+	struct Tanh : public IActivationFunction
+	{
+		// Inherited via IActivationFunction
+		virtual double Get(double x) override;
+		virtual double GetDerivative(double x) override;
+
+		virtual double Normalize(double x, DataSetInfo& _dataSetInfo) override;
+		virtual double Denormalize(double x, DataSetInfo& _dataSetInfo) override;
 	};
 
 //===================================================================================
@@ -64,6 +97,8 @@ namespace neural_network
 		std::vector<NeuronLayerCreateInfo> LayerInfos;
 
 		IActivationFunction* ActivationFunction;
+
+		DataSetInfo InputDataSetInfo;
 	};
 
 
@@ -95,6 +130,8 @@ namespace neural_network
 		NeuronLayer& GetInputLayer();
 		NeuronLayer& GetOutputLayer();
 
+		void ForwardPropagation(const std::vector<double> _inputValues);
+
 	protected:
 		void ConnectNeurons();
 		void SetState(State _state) { CurrentState = _state; }
@@ -102,6 +139,10 @@ namespace neural_network
 
 		State CurrentState;		
 		std::vector<NeuronLayer> Layers;
+
+		IActivationFunction* ActivationFunction;
+
+		DataSetInfo InputDataSetInfo;
 	};
 //===================================================================================
 }
